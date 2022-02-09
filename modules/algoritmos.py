@@ -1,4 +1,25 @@
+from typing import List
 from .grafo import Grafo
+
+def componentes_fortemente_conexas(grafo: Grafo):
+    resultado1 = busca_em_profundidade({}, grafo, 1, [0])
+    transposto = grafo.transposto()
+    # fazer um modificado???
+    resultado2 = busca_em_profundidade({}, transposto, 1, [0])
+
+
+def busca_em_profundidade(visitados: dict, grafo: Grafo, vertice, tempo: list):
+    if vertice not in visitados:
+        visitados[vertice] = [tempo[0]]
+        tempo[0] += 1
+        
+        for vizinho in grafo.vizinhos(vertice):
+            busca_em_profundidade(visitados, grafo, vizinho, tempo)
+        
+        visitados[vertice].append(tempo[0])
+        tempo[0] += 1
+
+    return visitados
 
 def busca_em_largura(grafo: Grafo, s: int):
     fila = [s]

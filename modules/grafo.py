@@ -1,13 +1,26 @@
 class Grafo:
-    def __init__(self, arquivo):
+
+    def __init__(self, arquivo='', listaDeRotulos=None, listaDeAdj=None, listaDePesos=None, arestas=None):
+        if arquivo:
+            return self.__constroi_por_arquivo(arquivo)
+        return self.__constroi_por_argumento(listaDeRotulos, listaDeAdj, listaDePesos, arestas)
+
+    def __constroi_por_argumento(self, listaDeRotulos, listaDeAdj, listaDePesos, arestas):
+        self.__rotulos = listaDeRotulos
+        self.__listaDeAdj = listaDeAdj
+        self.__listaDePesos = listaDePesos
+        self.__arestas = arestas
+
+
+    def __constroi_por_arquivo(self, caminho_arquivo):
         # Como o indice dos vertices começa em 1, colocamos null na posição 0 das seguintes listas
         self.__rotulos = [None] # Lista de rotulos
         self.__listaDeAdj = [[None]] # para cada vertice há uma lista de vizinhos
         self.__listaDePesos = [[None]] # igual a lista adjacencia, mas com os pesos das arestas
         self.__arestas = []
 
-        self.__ler(arquivo)
-        
+        self.__ler(caminho_arquivo)
+
     
     # carregar um grafo a partir de um arquivo no formato especificado
     def __ler(self, caminho_arquivo): #recebe o nome do arquivo
@@ -65,3 +78,15 @@ class Grafo:
                     return self.__listaDePesos[u][i]
         else:
             return float('inf')
+    
+    def transposto(self):
+        listaDeAdj = [[] for i in range(self.qtdVertices() + 1)]
+        for i in range(1, len(self.__listaDeAdj)):
+            for adj in self.__listaDeAdj[i]:
+                listaDeAdj[adj].append(i)
+
+        transposto = Grafo(listaDeRotulos=self.__rotulos,
+                           listaDeAdj=listaDeAdj,
+                           listaDePesos=self.__listaDePesos,
+                           arestas=self.__arestas)
+        return transposto
